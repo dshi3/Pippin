@@ -52,23 +52,59 @@ public class Machine extends Observable {
 	public Machine() {
 		//Data Flow Instructions
 		INSTRUCTION_MAP.put("LOD", (int arg, boolean immediate, boolean indirect) -> {
-
+			if(immediate){
+				cpu.setAccumulator(arg);
+			} else if(indirect){
+				
+			} else {
+				
+			}
 		});
 		INSTRUCTION_MAP.put("STO", (int arg, boolean immediate, boolean indirect) -> {
-
+			if(immediate){
+				
+			} else if(indirect){
+				
+			} else {
+				
+			}
 		});
 		//Control Instructions
 		INSTRUCTION_MAP.put("JUMP", (int arg, boolean immediate, boolean indirect) -> {
-
+			if(immediate){
+				
+			} else if(indirect){
+				
+			} else {
+				
+			}
 		});
 		INSTRUCTION_MAP.put("JMPZ", (int arg, boolean immediate, boolean indirect) -> {
-
+			if(immediate){
+				
+			} else if(indirect){
+				
+			} else {
+				
+			}
 		});
 		INSTRUCTION_MAP.put("NOP", (int arg, boolean immediate, boolean indirect) -> {
-
+			if(immediate){
+				
+			} else if(indirect){
+				
+			} else {
+				
+			}
 		});
 		INSTRUCTION_MAP.put("HALT", (int arg, boolean immediate, boolean indirect) -> {
-
+			if(immediate){
+				
+			} else if(indirect){
+				
+			} else {
+				
+			}
 		});
 		//Arithmetic-logic Instructions
 		INSTRUCTION_MAP.put("ADD",(int arg, boolean immediate, boolean indirect) -> {
@@ -83,19 +119,49 @@ public class Machine extends Observable {
 			cpu.incrementCounter();
 		});
 		INSTRUCTION_MAP.put("SUB", (int arg, boolean immediate, boolean indirect) -> {
-
+			if(immediate){
+				
+			} else if(indirect){
+				
+			} else {
+				
+			}
 		});
 		INSTRUCTION_MAP.put("MUL", (int arg, boolean immediate, boolean indirect) -> {
-
+			if(immediate){
+				
+			} else if(indirect){
+				
+			} else {
+				
+			}
 		});
 		INSTRUCTION_MAP.put("DIV", (int arg, boolean immediate, boolean indirect) -> {
-
+			if(immediate){
+				
+			} else if(indirect){
+				
+			} else {
+				
+			}
 		});
 		INSTRUCTION_MAP.put("AND", (int arg, boolean immediate, boolean indirect) -> {
-
+			if(immediate){
+				
+			} else if(indirect){
+				
+			} else {
+				
+			}
 		});
 		INSTRUCTION_MAP.put("NOT", (int arg, boolean immediate, boolean indirect) -> {
-
+			if(immediate){
+				
+			} else if(indirect){
+				
+			} else {
+				
+			}
 		});
 		INSTRUCTION_MAP.put("CMPZ",(int arg, boolean immediate, boolean indirect) -> {
 			int operand = memory.getData(arg);
@@ -112,7 +178,13 @@ public class Machine extends Observable {
 			cpu.incrementCounter();
 		});
 		INSTRUCTION_MAP.put("CMPL", (int arg, boolean immediate, boolean indirect) -> {
-
+			if(immediate){
+				
+			} else if(indirect){
+				
+			} else {
+				
+			}
 		});
 	}
 }
