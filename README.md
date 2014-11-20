@@ -1,0 +1,8 @@
++Pippin
++======
++A simulator of a simple CPU and Memory. It is sophisticated enough to execute sorting.
++The inspiration for the machine many years ago was the machine described in
++DECKER, R. and HIRSHFIELD, S. The Analytical Engine: An Introduction to Computer
++Science Using the Internet, PWS Publishing, Boston, 1998.
++(see http://doctord.dyndns.org/Courses/UNH/CS216/The+PIPPIN+Machine.pdf)
++but this one is VERY different.

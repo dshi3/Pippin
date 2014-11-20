@@ -55,9 +55,10 @@ public class Machine extends Observable {
 			if(immediate){
 				cpu.setAccumulator(arg);
 			} else if(indirect){
-				
+				int arg1 = memory.getData(arg);
+				cpu.setAccumulator(memory.getData(arg1));
 			} else {
-				
+				cpu.setAccumulator(memory.getData(arg));
 			}
 		});
 		INSTRUCTION_MAP.put("STO", (int arg, boolean immediate, boolean indirect) -> {
