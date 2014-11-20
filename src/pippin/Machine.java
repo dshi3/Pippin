@@ -128,48 +128,78 @@ public class Machine extends Observable {
 			cpu.incrementCounter();
 		});
 		INSTRUCTION_MAP.put("SUB", (int arg, boolean immediate, boolean indirect) -> {
-			if(immediate){
-				
-			} else if(indirect){
-				
+			if (immediate) {
+				cpu.setAccumulator(cpu.getAccumulator() - arg);
+			} else if (indirect) {
+				cpu.setAccumulator(cpu.getAccumulator() - memory.getData(memory.getData(arg)));                    
 			} else {
-				
+				cpu.setAccumulator(cpu.getAccumulator() - memory.getData(arg));         
 			}
+			cpu.incrementCounter();
 		});
 		INSTRUCTION_MAP.put("MUL", (int arg, boolean immediate, boolean indirect) -> {
-			if(immediate){
-				
-			} else if(indirect){
-				
+			if (immediate) {
+				cpu.setAccumulator(cpu.getAccumulator() * arg);
+			} else if (indirect) {
+				cpu.setAccumulator(cpu.getAccumulator() * memory.getData(memory.getData(arg)));                    
 			} else {
-				
+				cpu.setAccumulator(cpu.getAccumulator() * memory.getData(arg));         
 			}
+			cpu.incrementCounter();
 		});
 		INSTRUCTION_MAP.put("DIV", (int arg, boolean immediate, boolean indirect) -> {
-			if(immediate){
-				
-			} else if(indirect){
-				
+			if (immediate) {
+				if (arg == 0){
+					throw new DivideByZeroException("Can't divide 0");
+				} else {
+					cpu.setAccumulator(cpu.getAccumulator() / arg);
+				}
+			} else if (indirect) {
+				if (memory.getData(memory.getData(arg)) == 0){
+					throw new DivideByZeroException("Can't divide 0");
+				} else {
+					cpu.setAccumulator(cpu.getAccumulator() / memory.getData(memory.getData(arg)));
+				}
 			} else {
-				
+				if (memory.getData(arg) == 0){
+					throw new DivideByZeroException("Can't divide 0");
+				} else {
+					cpu.setAccumulator(cpu.getAccumulator() / memory.getData(arg));
+				}
 			}
+			cpu.incrementCounter();
 		});
 		INSTRUCTION_MAP.put("AND", (int arg, boolean immediate, boolean indirect) -> {
 			if(immediate){
-				
+				if (cpu.getAccumulator() == 0 && arg == 0){
+					cpu.setAccumulator(1);
+				} else {
+					cpu.setAccumulator(0);
+				}
+				cpu.incrementCounter();
 			} else if(indirect){
-				
+				throw new IllegalInstructionModeException("attempt to execute indirect AND");
 			} else {
-				
+				if (cpu.getAccumulator() == 0 && memory.getData(arg) == 0){
+					cpu.setAccumulator(1);
+				} else {
+					cpu.setAccumulator(0);
+				}
+				cpu.incrementCounter();
 			}
 		});
 		INSTRUCTION_MAP.put("NOT", (int arg, boolean immediate, boolean indirect) -> {
 			if(immediate){
-				
+				throw new IllegalInstructionModeException("attempt to execute immediate NOT");
 			} else if(indirect){
-				
+				throw new IllegalInstructionModeException("attempt to execute indirect NOT");
 			} else {
-				
+				if (cpu.getAccumulator() == 0){
+					cpu.setAccumulator(1);
+				} else {
+					cpu.setAccumulator(0);
+				}
+				cpu.incrementCounter();
 			}
 		});
 		INSTRUCTION_MAP.put("CMPZ",(int arg, boolean immediate, boolean indirect) -> {
@@ -188,11 +218,16 @@ public class Machine extends Observable {
 		});
 		INSTRUCTION_MAP.put("CMPL", (int arg, boolean immediate, boolean indirect) -> {
 			if(immediate){
-				
+				throw new IllegalInstructionModeException("attempt to execute immediate CMPL");
 			} else if(indirect){
-				
+				throw new IllegalInstructionModeException("attempt to execute indirect CMPL");
 			} else {
-				
+				if(memory.getData(arg) < 0){
+					cpu.setAccumulator(1);          
+				} else {
+					cpu.setAccumulator(0);          
+				}
+				cpu.incrementCounter();
 			}
 		});
 	}
