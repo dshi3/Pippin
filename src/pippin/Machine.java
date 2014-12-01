@@ -85,13 +85,13 @@ public class Machine extends Observable {
 			if(immediate){
 				throw new IllegalInstructionModeException("attempt to execute immediate JUMPZ");
 			} else if(indirect){
-				if(cpu.getProgramCounter()==0){
+				if(cpu.getAccumulator()==0){
 					cpu.setProgramCounter(memory.getData(arg));
 				} else {
 					cpu.incrementCounter();
 				}
 			} else {
-				if(cpu.getProgramCounter()==0){
+				if(cpu.getAccumulator()==0){
 					cpu.setProgramCounter(arg);
 				} else {
 					cpu.incrementCounter();
@@ -172,7 +172,7 @@ public class Machine extends Observable {
 		});
 		INSTRUCTION_MAP.put("AND", (int arg, boolean immediate, boolean indirect) -> {
 			if(immediate){
-				if (cpu.getAccumulator() == 0 && arg == 0){
+				if (cpu.getAccumulator() != 0 && arg != 0){
 					cpu.setAccumulator(1);
 				} else {
 					cpu.setAccumulator(0);
@@ -181,7 +181,7 @@ public class Machine extends Observable {
 			} else if(indirect){
 				throw new IllegalInstructionModeException("attempt to execute indirect AND");
 			} else {
-				if (cpu.getAccumulator() == 0 && memory.getData(arg) == 0){
+				if (cpu.getAccumulator() != 0 && memory.getData(arg) != 0){
 					cpu.setAccumulator(1);
 				} else {
 					cpu.setAccumulator(0);
