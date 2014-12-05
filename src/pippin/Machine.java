@@ -77,6 +77,7 @@ public class Machine extends Observable {
         return INSTRUCTION_MAP.get(key);
     }
 	
+	//TODO: implement methods
 	public void step(){
 		
 	}
