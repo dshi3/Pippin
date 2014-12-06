@@ -62,8 +62,11 @@ public class MemoryViewPanel implements Observer{
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-		
+		for(int i = lower; i < upper; i++) {
+            //if(memory.getData(i) != 0) System.out.println("DMupdate " + lower + " " + i + " " + memory.getData(i));
+            dataDecimal[i].setText(""+memory.getData(i));
+            dataHex[i].setText(Integer.toHexString(memory.getData(i)));
+        }
 	}
 	
     public static void main(String[] args) {
