@@ -17,6 +17,10 @@ public class Code {
 	public static final int CODE_MAX = 256;
 	private ArrayList<IntPair> program = new ArrayList<IntPair>();
 	
+	public Code() {
+		super();
+	}
+	
 	public void setCode(int op, int arg){
 		program.add(new IntPair(op, arg));
 	}

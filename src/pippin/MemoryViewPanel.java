@@ -16,8 +16,8 @@ import javax.swing.JTextField;
 public class MemoryViewPanel implements Observer{
 	private Memory memory;
 	private JScrollPane scroller;
-	private JTextField[] dataDecimal = new JTextField[Code.CODE_MAX];
-	private JTextField[] dataHex = new JTextField[Code.CODE_MAX];
+	private JTextField[] dataDecimal = new JTextField[Memory.DATA_SIZE];
+	private JTextField[] dataHex = new JTextField[Memory.DATA_SIZE];
 	private int lower;
 	private int upper;
 	
@@ -40,7 +40,7 @@ public class MemoryViewPanel implements Observer{
         decimalPanel.setLayout(new GridLayout(0,1));
         hexPanel.setLayout(new GridLayout(0,1));
         //set row numbers and texts
-        for(int i = 0; i < Code.CODE_MAX; i++) {
+        for(int i = 0; i < Memory.DATA_SIZE; i++) {
         	numPanel.add(new JLabel(i+": ", JLabel.RIGHT));
         	dataDecimal[i] = new JTextField(10);
         	dataHex[i] = new JTextField(10);

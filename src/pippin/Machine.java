@@ -30,7 +30,7 @@ public class Machine extends Observable {
 	public final Map<Integer, Instruction> INSTRUCTION_MAP = new TreeMap<>();
 	private Memory memory = new Memory();
 	private Processor cpu = new Processor();
-	private Code code;
+	private Code code = new Code();
 	private boolean running = false;
     private boolean autoStepOn = false;
     private File currentlyExecutingFile = null;
@@ -100,24 +100,136 @@ public class Machine extends Observable {
         return INSTRUCTION_MAP.get(key);
     }
 	
-	public void step(){
-		
+	public void setRunning(boolean b){
+    	running = b;
+    	if(running){
+    		state = States.PROGRAM_LOADED_NOT_AUTOSTEPPING;
+    	} else {
+    		autoStepOn = false;
+    		state = States.PROGRAM_HALTED;
+    	}
+    	state.enter();
+    	setChanged();
+    	notifyObservers();
+    }
+    
+    private void finalLoad_ReloadStep() {
+        try {
+            Loader.load(memory, code, currentlyExecutingFile);
+            setRunning(true);
+            setChanged();
+            notifyObservers("Load Code");                       
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(
+                    frame, 
+                    "The file being selected has problems.\n" +
+                            "Cannot load the program",
+                            "Warning",
+                            JOptionPane.OK_OPTION);
+        }       
+    }
+    
+    public void execute() {
+    	while(running){
+    		try{
+    			int idx = getProgramCounter();
+    			System.out.println(idx);
+    			int opcode = getCode().getOpcode(idx);
+    			int arg = getCode().getArg(idx);
+				boolean imm = getCode().getImmediate(idx);
+				boolean ind = getCode().getIndirect(idx);
+				INSTRUCTION_MAP.get(opcode).execute(arg, imm, ind);
+    		} catch(ArrayIndexOutOfBoundsException e){
+    			JOptionPane.showMessageDialog(
+                        frame, 
+                        "There was an error in accessing code of the program.\n" +
+                                "Array Index Out of Bounds",
+                                "Warning",
+                                JOptionPane.OK_OPTION);
+    			halt();
+    		} catch (NullPointerException e){
+    			JOptionPane.showMessageDialog(
+                        frame, 
+                        "There was a Null Pointer.\n" +
+                                "Error in the simulator",
+                                "Warning",
+                                JOptionPane.OK_OPTION);
+    			halt();
+    		}
+    	}
+    	setChanged();
+    	notifyObservers();
+    }
+	
+    public void step(){
+    	try{
+    		int idx = getProgramCounter();
+    		int opcode = getCode().getOpcode(idx);
+    		int arg = getCode().getArg(idx);
+    		boolean imm = getCode().getImmediate(idx);
+    		boolean ind = getCode().getIndirect(idx);
+    		INSTRUCTION_MAP.get(opcode).execute(arg, imm, ind);
+    	} catch(ArrayIndexOutOfBoundsException e){
+    		JOptionPane.showMessageDialog(
+    				frame, 
+    				"There was an error in accessing code of the program.\n" +
+    						"Array Index Out of Bounds",
+    						"Warning",
+    						JOptionPane.OK_OPTION);
+    		halt();
+    	} catch (NullPointerException e){
+    		JOptionPane.showMessageDialog(
+    				frame, 
+    				"There was a Null Pointer.\n" +
+    						"Error in the simulator",
+    						"Warning",
+    						JOptionPane.OK_OPTION);
+    		halt();
+    	}
+    	setChanged();
+    	notifyObservers();
+    }
+	
+	public void setAutoStepOn(boolean b){
+		autoStepOn = b;
+		if(autoStepOn){
+			state = States.AUTO_STEPPING;
+		} else {
+			state = States.PROGRAM_LOADED_NOT_AUTOSTEPPING;
+		}
+		state.enter();
+		setChanged();
+		notifyObservers();
 	}
 	
 	public void clearAll(){
-		
+		memory.clear();
+		code.clear();
+		cpu.setAccumulator(0);
+		cpu.setProgramCounter(0);
+		state = States.NOTHING_LOADED;
+		state.enter();
+		setChanged();
+		notifyObservers("Clear");
 	}
 	
 	public void reload(){
+		clearAll();
+		finalLoad_ReloadStep();
 		
 	}
 	
 	public void toggleAutoStep(){
-		
+		if(autoStepOn){
+			setAutoStepOn(false);
+		} else {
+			setAutoStepOn(true);
+		}
 	}
 	
 	public void halt(){
-		
+		setAutoStepOn(false);
+		setRunning(false);
 	}
 
 	public void exit() {
@@ -185,14 +297,14 @@ public class Machine extends Observable {
                 } catch (Exception e) {
                     System.out.println("Error writing properties file");
                 }
-                Assembler.assemble(source, outputExe);
-                JOptionPane.showMessageDialog(
+                if(Assembler.assemble(source, outputExe)){
+                    JOptionPane.showMessageDialog(
                         frame, 
                         "The source was assembled to an executable",
                         "Success",
-                        JOptionPane.INFORMATION_MESSAGE);               
-            } else {
-            	// outputExe Still null
+                        JOptionPane.INFORMATION_MESSAGE);
+                }               
+            } else {// outputExe Still null
                 JOptionPane.showMessageDialog(
                         frame, 
                         "The output file has problems.\n" +
@@ -200,8 +312,7 @@ public class Machine extends Observable {
                                 "Warning",
                                 JOptionPane.OK_OPTION);
             }
-        } else {
-        	// outputExe does not exist
+        } else {// outputExe does not exist
             JOptionPane.showMessageDialog(
                     frame, 
                     "The source file has problems.\n" +
@@ -237,39 +348,6 @@ public class Machine extends Observable {
             }           
         }
         finalLoad_ReloadStep();
-    }
-    
-    public void setRunning(boolean b){
-    	running = b;
-    	if(running){
-    		state = States.PROGRAM_LOADED_NOT_AUTOSTEPPING;
-    	} else {
-    		autoStepOn = false;
-    		state = States.PROGRAM_HALTED;
-    	}
-    	state.enter();
-    	setChanged();
-    	notifyObservers();
-    }
-    
-    private void finalLoad_ReloadStep() {
-        try {
-            Loader.load(memory, code, currentlyExecutingFile);
-            setRunning(true);
-            setChanged();
-            notifyObservers("Load Code");                       
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(
-                    frame, 
-                    "The file being selected has problems.\n" +
-                            "Cannot load the program",
-                            "Warning",
-                            JOptionPane.OK_OPTION);
-        }       
-    }
-    
-    public void execute() {
-    	
     }
 	
 	private void createAndShowGUI(){
