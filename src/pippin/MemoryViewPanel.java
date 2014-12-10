@@ -48,7 +48,7 @@ public class MemoryViewPanel implements Observer{
         hexPanel.setLayout(new GridLayout(0,1));
         //set row numbers and texts
         for(int i = lower; i < upper; i++) {
-//        for(int i = 0; i < Memory.DATA_SIZE; i++) {
+//      for(int i = 0; i < Memory.DATA_SIZE; i++) {
         	numPanel.add(new JLabel(i+": ", JLabel.RIGHT));
         	dataDecimal[i] = new JTextField(10);
         	dataHex[i] = new JTextField(10);
@@ -56,7 +56,7 @@ public class MemoryViewPanel implements Observer{
         	hexPanel.add(dataHex[i]);
         }
         //Give the returnPanel a Label
-        returnPanel.add(new JLabel("Data Memory View [" + lower + "-" + upper + "]", JLabel.CENTER), 
+        returnPanel.add(new JLabel("Data Memory View [" + lower + "-" + (upper-1) + "]", JLabel.CENTER), 
                 BorderLayout.PAGE_START);
         //Assemble the JPanels, some side by side and some nested
         panel.add(numPanel, BorderLayout.LINE_START);

@@ -121,19 +121,19 @@ public class Machine extends Observable {
             notifyObservers("Load Code");                       
         } catch (IOException e) {
             JOptionPane.showMessageDialog(
-                    frame, 
+                    frame,
                     "The file being selected has problems.\n" +
                             "Cannot load the program",
                             "Warning",
                             JOptionPane.OK_OPTION);
-        }       
+        } catch (NullPointerException e){
+        }
     }
     
     public void execute() {
     	while(running){
     		try{
     			int idx = getProgramCounter();
-//System.out.println(idx);
     			int opcode = getCode().getOpcode(idx);
     			int arg = getCode().getArg(idx);
 				boolean imm = getCode().getImmediate(idx);
@@ -142,8 +142,16 @@ public class Machine extends Observable {
     		} catch(ArrayIndexOutOfBoundsException e){
     			JOptionPane.showMessageDialog(
                         frame, 
-                        "There was an error in accessing code of the program.\n" +
+                        "There was an error in accessing data memory.\n" +
                                 "Array Index Out of Bounds",
+                                "Warning",
+                                JOptionPane.OK_OPTION);
+    			halt();
+    		} catch(IndexOutOfBoundsException e){
+    			JOptionPane.showMessageDialog(
+                        frame, 
+                        "There was an error in accessing code of the program.\n" +
+                                "Index Out of Bounds",
                                 "Warning",
                                 JOptionPane.OK_OPTION);
     			halt();
@@ -152,6 +160,14 @@ public class Machine extends Observable {
                         frame, 
                         "There was a Null Pointer.\n" +
                                 "Error in the simulator",
+                                "Warning",
+                                JOptionPane.OK_OPTION);
+    			halt();
+    		} catch (DivideByZeroException e){
+    			JOptionPane.showMessageDialog(
+                        frame, 
+                        "Can't be devided by 0.\n" +
+                                "Error in the code",
                                 "Warning",
                                 JOptionPane.OK_OPTION);
     			halt();
@@ -177,7 +193,15 @@ public class Machine extends Observable {
     						"Warning",
     						JOptionPane.OK_OPTION);
     		halt();
-    	} catch (NullPointerException e){
+    	} catch(IndexOutOfBoundsException e){
+			JOptionPane.showMessageDialog(
+                    frame, 
+                    "There was an error in accessing code of the program.\n" +
+                            "Index Out of Bounds",
+                            "Warning",
+                            JOptionPane.OK_OPTION);
+			halt();
+		} catch (NullPointerException e){
     		JOptionPane.showMessageDialog(
     				frame, 
     				"There was a Null Pointer.\n" +
@@ -229,7 +253,7 @@ public class Machine extends Observable {
 			setAutoStepOn(true);
 		}
 	}
-	
+
 	public void halt(){
 		setAutoStepOn(false);
 		setRunning(false);
@@ -248,82 +272,84 @@ public class Machine extends Observable {
 	}
 
 	/**
-     * Translate method reads a source "pasm" file and saves the
-     * file with the extension "pexe" 
-     * 
-     */
-    public void assembleFile() {
-        File source = null;
-        File outputExe = null;
-        JFileChooser chooser = new JFileChooser(sourceDir);
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "Pippin Source Files", "pasm");
-        chooser.setFileFilter(filter);
-        // CODE TO LOAD DESIRED FILE
-        int openOK = chooser.showOpenDialog(null);
-        if(openOK == JFileChooser.APPROVE_OPTION) {
-            source = chooser.getSelectedFile();
-        }
-        if(source != null && source.exists()) {
-            // CODE TO REMEMBER WHICH DIRECTORY HAS THE pexe FILES
-            // WHICH WE WILL ALLOW TO BE DIFFERENT
-            sourceDir = source.getAbsolutePath();
-            sourceDir = sourceDir.replace('\\','/');
-            int lastDot = sourceDir.lastIndexOf('.');
-            String outName = sourceDir.substring(0, lastDot + 1) + "pexe";          
-            int lastSlash = sourceDir.lastIndexOf('/');
-            sourceDir = sourceDir.substring(0, lastSlash + 1);
-            outName = outName.substring(lastSlash+1); 
-            filter = new FileNameExtensionFilter(
-                    "Pippin Executable Files", "pexe");
-            if(executableDir.equals(eclipseDir)) {
-                chooser = new JFileChooser(sourceDir);
-            } else {
-                chooser = new JFileChooser(executableDir);
-            }
-            chooser.setFileFilter(filter);
-            chooser.setSelectedFile(new File(outName));
-            int saveOK = chooser.showSaveDialog(null);
-            if(saveOK == JFileChooser.APPROVE_OPTION) {
-                outputExe = chooser.getSelectedFile();
-            }
-            if(outputExe != null) {
-                executableDir = outputExe.getAbsolutePath();
-                executableDir = executableDir.replace('\\','/');
-                lastSlash = executableDir.lastIndexOf('/');
-                executableDir = executableDir.substring(0, lastSlash + 1);
-                try { 
-                    properties.setProperty("SourceDirectory", sourceDir);
-                    properties.setProperty("ExecutableDirectory", executableDir);
-                    properties.store(new FileOutputStream("propertyfile.txt"), 
-                            "File locations");
-                } catch (Exception e) {
-                    System.out.println("Error writing properties file");
-                }
-                if(Assembler.assemble(source, outputExe)){
-                    JOptionPane.showMessageDialog(
-                        frame, 
-                        "The source was assembled to an executable",
-                        "Success",
-                        JOptionPane.INFORMATION_MESSAGE);
-                }               
-            } else {// outputExe Still null
-                JOptionPane.showMessageDialog(
-                        frame, 
-                        "The output file has problems.\n" +
-                                "Cannot assemble the program",
-                                "Warning",
-                                JOptionPane.OK_OPTION);
-            }
-        } else {// outputExe does not exist
-            JOptionPane.showMessageDialog(
-                    frame, 
-                    "The source file has problems.\n" +
-                            "Cannot assemble the program",
-                            "Warning",
-                            JOptionPane.OK_OPTION);             
-        }
-    }
+	 * Translate method reads a source "pasm" file and saves the
+	 * file with the extension "pexe" 
+	 * 
+	 */
+	public void assembleFile() {
+		File source = null;
+		File outputExe = null;
+		JFileChooser chooser = new JFileChooser(sourceDir);
+		FileNameExtensionFilter filter = new FileNameExtensionFilter(
+				"Pippin Source Files", "pasm");
+		chooser.setFileFilter(filter);
+		// CODE TO LOAD DESIRED FILE
+		int openOK = chooser.showOpenDialog(null);
+		if(openOK != JFileChooser.CANCEL_OPTION){
+			if(openOK == JFileChooser.APPROVE_OPTION) {
+				source = chooser.getSelectedFile();
+			}
+			if(source != null && source.exists()) {
+				// CODE TO REMEMBER WHICH DIRECTORY HAS THE pexe FILES
+				// WHICH WE WILL ALLOW TO BE DIFFERENT
+				sourceDir = source.getAbsolutePath();
+				sourceDir = sourceDir.replace('\\','/');
+				int lastDot = sourceDir.lastIndexOf('.');
+				String outName = sourceDir.substring(0, lastDot + 1) + "pexe";          
+				int lastSlash = sourceDir.lastIndexOf('/');
+				sourceDir = sourceDir.substring(0, lastSlash + 1);
+				outName = outName.substring(lastSlash+1); 
+				filter = new FileNameExtensionFilter(
+						"Pippin Executable Files", "pexe");
+				if(executableDir.equals(eclipseDir)) {
+					chooser = new JFileChooser(sourceDir);
+				} else {
+					chooser = new JFileChooser(executableDir);
+				}
+				chooser.setFileFilter(filter);
+				chooser.setSelectedFile(new File(outName));
+				int saveOK = chooser.showSaveDialog(null);
+				if(saveOK == JFileChooser.APPROVE_OPTION) {
+					outputExe = chooser.getSelectedFile();
+				}
+				if(outputExe != null) {
+					executableDir = outputExe.getAbsolutePath();
+					executableDir = executableDir.replace('\\','/');
+					lastSlash = executableDir.lastIndexOf('/');
+					executableDir = executableDir.substring(0, lastSlash + 1);
+					try { 
+						properties.setProperty("SourceDirectory", sourceDir);
+						properties.setProperty("ExecutableDirectory", executableDir);
+						properties.store(new FileOutputStream("propertyfile.txt"), 
+								"File locations");
+					} catch (Exception e) {
+						System.out.println("Error writing properties file");
+					}
+					if(Assembler.assemble(source, outputExe)){
+						JOptionPane.showMessageDialog(
+								frame, 
+								"The source was assembled to an executable",
+								"Success",
+								JOptionPane.INFORMATION_MESSAGE);
+					}
+				} else {// outputExe Still null
+					JOptionPane.showMessageDialog(
+							frame, 
+							"The output file has problems.\n" +
+									"Cannot assemble the program",
+									"Warning",
+									JOptionPane.OK_OPTION);
+				}
+			} else {// outputExe does not exist
+				JOptionPane.showMessageDialog(
+						frame, 
+						"The source file has problems.\n" +
+								"Cannot assemble the program",
+								"Warning",
+								JOptionPane.OK_OPTION);             
+			}
+		}
+	}
     
     public void loadFile() {
         JFileChooser chooser = new JFileChooser(executableDir);

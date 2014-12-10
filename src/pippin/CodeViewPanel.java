@@ -91,11 +91,16 @@ public class CodeViewPanel implements Observer{
 			previousColor = -1;
 		}
 		if(previousColor >= 0){
-			codeText[previousColor].setBackground(Color.WHITE);
-            codeHex[previousColor].setBackground(Color.WHITE);
-            previousColor = cpu.getProgramCounter();
-            codeText[previousColor].setBackground(Color.YELLOW);
-            codeHex[previousColor].setBackground(Color.YELLOW);
+			try{
+				//TODO
+				codeText[previousColor].setBackground(Color.WHITE);
+				codeHex[previousColor].setBackground(Color.WHITE);
+				previousColor = cpu.getProgramCounter();
+				codeText[previousColor].setBackground(Color.YELLOW);
+				codeHex[previousColor].setBackground(Color.YELLOW);
+			} catch(ArrayIndexOutOfBoundsException e){
+				//TODO
+			}
 		}
 		if(scroller != null && code != null && cpu!= null) {
             JScrollBar bar= scroller.getVerticalScrollBar();

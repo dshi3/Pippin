@@ -14,7 +14,7 @@ public class Loader {
 			while(input.hasNextInt(16)){
 				int inp = input.nextInt(16);
 				if (inp == -1){
-					//TODO: DATA MODE
+					isCode = false;
 				} else if (isCode){
 					int arg = input.nextInt(16);
 					code.setCode(inp, arg);

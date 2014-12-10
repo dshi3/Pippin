@@ -93,6 +93,7 @@ public class Assembler {
 					}
 					//check whitespace or tab
 					if(goodProgram && Character.isWhitespace(line.charAt(0))){
+						goodProgram = false;
 						JOptionPane.showMessageDialog(null,
 								"Blank character at the start of line " + lineCounter,
 								"Source Error", JOptionPane.WARNING_MESSAGE);
@@ -104,18 +105,21 @@ public class Assembler {
 					} else if(goodProgram){
 						String[] parts = line.trim().split("\\s+");
 						if(parts.length > 2){
+							goodProgram = false;
 							JOptionPane.showMessageDialog(null,
 									"Too many items on line " + lineCounter,
 									"Source Error", JOptionPane.WARNING_MESSAGE);
 						}
 						if(goodProgram && inCode) {
 							if(!isUpperLetter(parts[0])){
+								goodProgram = false;
 								JOptionPane.showMessageDialog(null,
 										"Mnemonic is not in upper case of line " + lineCounter,
 										"Source Error", JOptionPane.WARNING_MESSAGE);
 							}
 							if(goodProgram && parts.length == 1){
 								if(!noArgument.contains(parts[0])){
+									goodProgram = false;
 									JOptionPane.showMessageDialog(null,
 											"Illegal mnemonic or missing argument of line " + lineCounter,
 											"Source Error", JOptionPane.WARNING_MESSAGE);
@@ -125,11 +129,13 @@ public class Assembler {
 								}
 							} else if(goodProgram){
 								if(noArgument.contains(parts[0])){
+									goodProgram = false;
 									JOptionPane.showMessageDialog(null,
 											"Illegal argument of line " + lineCounter,
 											"Source Error", JOptionPane.WARNING_MESSAGE);
 								}
 								if(goodProgram && (!opcode.keySet().contains(parts[0]))){
+									goodProgram = false;
 									JOptionPane.showMessageDialog(null,
 											"Illegal mnemonic of line " + lineCounter,
 											"Source Error", JOptionPane.WARNING_MESSAGE);
@@ -140,6 +146,7 @@ public class Assembler {
 										outp.println(Integer.toHexString(opcode.get(parts[0])));
 										outp.println(parts[1]);
 									} catch(NumberFormatException e){
+										goodProgram = false;
 										JOptionPane.showMessageDialog(null,
 												"The argument is not an int on line " + lineCounter,
 												"Source Error", JOptionPane.WARNING_MESSAGE);
@@ -148,6 +155,7 @@ public class Assembler {
 							}
 						} else if(goodProgram){
 							if(parts.length != 2){
+								goodProgram = false;
 								JOptionPane.showMessageDialog(null,
 										"There is no address/value pair on this data line " + lineCounter,
 										"Source Error", JOptionPane.WARNING_MESSAGE);
@@ -155,11 +163,13 @@ public class Assembler {
 								try{
 									int addr = Integer.parseInt(parts[0], 16);
 									if(addr < 0){
+										goodProgram = false;
 										JOptionPane.showMessageDialog(null,
 												"Memory address cannot be negative on line " + lineCounter,
 												"Source Error", JOptionPane.WARNING_MESSAGE);
 									}
 								} catch(NumberFormatException e) {
+									goodProgram = false;
 									JOptionPane.showMessageDialog(null,
 											"Memory address is not an int on line " + lineCounter,
 											"Source Error", JOptionPane.WARNING_MESSAGE);
@@ -171,6 +181,7 @@ public class Assembler {
 									outp.println(parts[0]);
 			                        outp.println(parts[1]);
 								} catch(NumberFormatException e){
+									goodProgram = false;
 									JOptionPane.showMessageDialog(null,
 											"Memory value is not an int on line " + lineCounter,
 											"Source Error", JOptionPane.WARNING_MESSAGE);
@@ -191,11 +202,11 @@ public class Assembler {
 		return goodProgram;
 	}
 
-	public static void main(String[] args) {
-		System.out.print("Please enter a file name: ");
-		Scanner input = new Scanner(System.in);
-		String name = input.nextLine();
-		input.close();
-		assemble(new File(name + ".pasm"), new File(name + ".pexe"));
-	}
+//	public static void main(String[] args) {
+//		System.out.print("Please enter a file name: ");
+//		Scanner input = new Scanner(System.in);
+//		String name = input.nextLine();
+//		input.close();
+//		assemble(new File(name + ".pasm"), new File(name + ".pexe"));
+//	}
 }
