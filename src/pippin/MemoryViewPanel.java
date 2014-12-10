@@ -47,7 +47,6 @@ public class MemoryViewPanel implements Observer{
         decimalPanel.setLayout(new GridLayout(0,1));
         hexPanel.setLayout(new GridLayout(0,1));
         //set row numbers and texts
-        //TODO: layout change needed for consecutive panes
         for(int i = lower; i < upper; i++) {
 //        for(int i = 0; i < Memory.DATA_SIZE; i++) {
         	numPanel.add(new JLabel(i+": ", JLabel.RIGHT));

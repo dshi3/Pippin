@@ -109,7 +109,7 @@ public class Assembler {
 									"Source Error", JOptionPane.WARNING_MESSAGE);
 						}
 						if(goodProgram && inCode) {
-							if(isUpperLetter(parts[0])){
+							if(!isUpperLetter(parts[0])){
 								JOptionPane.showMessageDialog(null,
 										"Mnemonic is not in upper case of line " + lineCounter,
 										"Source Error", JOptionPane.WARNING_MESSAGE);

@@ -133,7 +133,7 @@ public class Machine extends Observable {
     	while(running){
     		try{
     			int idx = getProgramCounter();
-System.out.println(idx);
+//System.out.println(idx);
     			int opcode = getCode().getOpcode(idx);
     			int arg = getCode().getArg(idx);
 				boolean imm = getCode().getImmediate(idx);
