@@ -1,4 +1,4 @@
 #File locations
-#Wed Dec 10 15:59:07 EST 2014
-ExecutableDirectory=/Users/Steven/Desktop/testfiles/
-SourceDirectory=/Users/Steven/Desktop/testfiles/
+#Thu Dec 11 11:50:56 EST 2014
+ExecutableDirectory=/u0/users/5/dshi3/workspace2/Pippin/
+SourceDirectory=/u0/users/5/dshi3/workspace2/Pippin/

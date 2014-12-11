@@ -29,6 +29,10 @@ public class Code {
 		return program.get(i).arg;
 	}
 	
+	public int getProgramSize(){
+		return program.size();
+	}
+	
 	public boolean getImmediate(int i){
 		if(program.get(i).op >= 0x100 && program.get(i).op < 0x200){
 			return true;
