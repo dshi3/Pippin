@@ -22,7 +22,7 @@ public class MemoryViewPanel implements Observer{
 	private JTextField[] dataHex = new JTextField[Memory.DATA_SIZE];
 	private int lower;
 	private int upper;
-	private int previousColor = -1;
+	private static int previousColor = -1;
 	
 	public MemoryViewPanel(Machine machine, int lower, int upper){
 		memory = machine.getMemory();
@@ -31,14 +31,15 @@ public class MemoryViewPanel implements Observer{
 		machine.addObserver(this);
 	}
 	
-//	public void resetPreviousColor(){
-//		previousColor = -1;
-//	}
+	public void resetPreviousColor(){
+		previousColor = -1;
+	}
 	
 	public JComponent createMemoryDisplay(){
 		JPanel returnPanel = new JPanel(), 
 				panel = new JPanel(), numPanel = new JPanel(), 
-				decimalPanel = new JPanel(), hexPanel = new JPanel();
+				decimalPanel = new JPanel(), hexPanel = new JPanel(),
+				labelPanel = new JPanel();
 		//layout and dimensioning
 		returnPanel.setPreferredSize(new Dimension(300,150));;
         returnPanel.setLayout(new BorderLayout());
@@ -56,8 +57,14 @@ public class MemoryViewPanel implements Observer{
         	hexPanel.add(dataHex[i]);
         }
         //Give the returnPanel a Label
-        returnPanel.add(new JLabel("Data Memory View [" + lower + "-" + (upper-1) + "]", JLabel.CENTER), 
-                BorderLayout.PAGE_START);
+        labelPanel.setLayout(new BorderLayout());
+        labelPanel.add(new JLabel("Data Memory View [" + lower + "-" + (upper-1) + "]", JLabel.CENTER), 
+                BorderLayout.NORTH);
+        labelPanel.add(new JLabel("Decimal", JLabel.CENTER), 
+                BorderLayout.CENTER);
+        labelPanel.add(new JLabel("Hexadecimal", JLabel.LEFT), 
+                BorderLayout.LINE_END);
+        returnPanel.add(labelPanel, BorderLayout.PAGE_START);
         //Assemble the JPanels, some side by side and some nested
         panel.add(numPanel, BorderLayout.LINE_START);
         panel.add(decimalPanel, BorderLayout.CENTER);
@@ -70,11 +77,16 @@ public class MemoryViewPanel implements Observer{
 	
 	@Override
 	public void update(Observable arg0, Object arg1) {
+		if(previousColor == -1){
+			previousColor = memory.getChangedIndex();
+		}
+		
 		for(int i = lower; i < upper; i++) {
             //if(memory.getData(i) != 0) System.out.println("DMupdate " + lower + " " + i + " " + memory.getData(i));
             dataDecimal[i].setText(""+memory.getData(i));
             dataHex[i].setText(Integer.toHexString(memory.getData(i)));
         }
+//		System.out.println(this.toString() + previousColor + " " + lower + " " + upper + " " + memory.getChangedIndex());
 		if(arg1 != null && arg1.equals("Clear")){
 			for(int i = lower; i < upper; i++) {
 	            dataDecimal[i].setText("");
@@ -88,10 +100,12 @@ public class MemoryViewPanel implements Observer{
 		} else if(previousColor >= lower && previousColor < upper){
 			dataDecimal[previousColor].setBackground(Color.WHITE);
 			dataHex[previousColor].setBackground(Color.WHITE);
+//			System.out.print("###" + memory.getChangedIndex());
 			previousColor = memory.getChangedIndex();
+//			System.out.println(this.toString() + " ~ " + previousColor);
 			if(previousColor >= lower && previousColor < upper){
-				dataDecimal[previousColor].setBackground(Color.YELLOW);
-				dataHex[previousColor].setBackground(Color.YELLOW);
+				dataDecimal[previousColor].setBackground(Color.GREEN);
+				dataHex[previousColor].setBackground(Color.GREEN);
 			}
 		}
 		if(scroller != null && memory != null) {

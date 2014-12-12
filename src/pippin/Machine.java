@@ -176,10 +176,10 @@ public class Machine extends Observable {
         	} catch (DivideByZeroException e){
     			JOptionPane.showMessageDialog(
                         frame, 
-                        e.getMessage() +
-                                "Run time Error",
-                                "Warning",
-                                JOptionPane.OK_OPTION);
+                        e.getMessage() + "\n" +
+                        "Run time Error",
+                        "Warning",
+                        JOptionPane.OK_OPTION);
     			halt();
     		}
     	}
@@ -232,10 +232,10 @@ public class Machine extends Observable {
     	} catch (DivideByZeroException e){
 			JOptionPane.showMessageDialog(
                     frame, 
-                    e.getMessage() +
-                            "Run time Error",
-                            "Warning",
-                            JOptionPane.OK_OPTION);
+                    e.getMessage() +"\n" +
+                    "Run time Error",
+                    "Warning",
+                    JOptionPane.OK_OPTION);
 			halt();
 		}
 //    	System.out.println(getProgramCounter());

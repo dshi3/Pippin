@@ -1,4 +1,4 @@
 #File locations
-#Thu Dec 11 11:50:56 EST 2014
-ExecutableDirectory=/u0/users/5/dshi3/workspace2/Pippin/
-SourceDirectory=/u0/users/5/dshi3/workspace2/Pippin/
+#Fri Dec 12 15:36:46 EST 2014
+ExecutableDirectory=/Users/Steven/git/Pippin/
+SourceDirectory=/Users/Steven/git/Pippin/
