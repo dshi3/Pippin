@@ -164,11 +164,12 @@ public class Machine extends Observable {
                                 JOptionPane.OK_OPTION);
     			halt();
     		} catch (IllegalArgumentException e){
-        		JOptionPane.showMessageDialog(
+    			JOptionPane.showMessageDialog(
         				frame, 
-        				"There was a illegal argument.\n" + 
+        				"Illegal access to code\n" + 
+        						"Exception Message: " +
         						e.getMessage() + "\n" +
-        						"Runtime Error",
+        						"Run time Error",
         						"Warning",
         						JOptionPane.OK_OPTION);
         		halt();
@@ -176,7 +177,7 @@ public class Machine extends Observable {
     			JOptionPane.showMessageDialog(
                         frame, 
                         e.getMessage() +
-                                "Runtime Error",
+                                "Run time Error",
                                 "Warning",
                                 JOptionPane.OK_OPTION);
     			halt();
@@ -221,9 +222,10 @@ public class Machine extends Observable {
     	} catch (IllegalArgumentException e){
     		JOptionPane.showMessageDialog(
     				frame, 
-    				"There was a illegal argument.\n" +
+    				"Illegal access to code\n" + 
+    						"Exception Message: " +
     						e.getMessage() + "\n" +
-    						"Runtime Error",
+    						"Run time Error",
     						"Warning",
     						JOptionPane.OK_OPTION);
     		halt();
@@ -231,7 +233,7 @@ public class Machine extends Observable {
 			JOptionPane.showMessageDialog(
                     frame, 
                     e.getMessage() +
-                            "Runtime Error",
+                            "Run time Error",
                             "Warning",
                             JOptionPane.OK_OPTION);
 			halt();
@@ -254,9 +256,9 @@ public class Machine extends Observable {
 	}
 	
 	public void clearAll(){
-		memoryViewPanel1.resetPreviousColor();
-		memoryViewPanel2.resetPreviousColor();
-		memoryViewPanel3.resetPreviousColor();
+//		memoryViewPanel1.resetPreviousColor();
+//		memoryViewPanel2.resetPreviousColor();
+//		memoryViewPanel3.resetPreviousColor();
 		memory.clear();
 		code.clear();
 		cpu.setAccumulator(0);
