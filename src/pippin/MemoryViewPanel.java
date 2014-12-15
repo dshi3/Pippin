@@ -31,9 +31,9 @@ public class MemoryViewPanel implements Observer{
 		machine.addObserver(this);
 	}
 	
-	public void resetPreviousColor(){
-		previousColor = -1;
-	}
+//	public void resetPreviousColor(){
+//		previousColor = -1;
+//	}
 	
 	public JComponent createMemoryDisplay(){
 		JPanel returnPanel = new JPanel(), 
@@ -91,8 +91,10 @@ public class MemoryViewPanel implements Observer{
 			for(int i = lower; i < upper; i++) {
 	            dataDecimal[i].setText("");
 	            dataHex[i].setText("");
-	        }
-			if(previousColor >=0){
+			}
+			if(previousColor >=0 && previousColor >= lower && previousColor < upper){
+//				System.out.println(previousColor);
+//				System.out.println(dataDecimal[previousColor]);
 				dataDecimal[previousColor].setBackground(Color.WHITE);
 				dataHex[previousColor].setBackground(Color.WHITE);
 				previousColor = -1;

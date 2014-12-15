@@ -1,4 +1,4 @@
 #File locations
-#Fri Dec 12 15:36:46 EST 2014
-ExecutableDirectory=/Users/Steven/git/Pippin/
+#Mon Dec 15 14:44:55 EST 2014
+ExecutableDirectory=/Users/Steven/git/Pippin/executables/
 SourceDirectory=/Users/Steven/git/Pippin/
